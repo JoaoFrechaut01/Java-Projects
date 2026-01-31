@@ -1,0 +1,22 @@
+package main;
+import java.util.Scanner;
+
+public class ConsoleBasedCalculator {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		
+		
+		System.out.println("====== Cosnole Based Calculator ======");
+		
+		while( running ) {
+			System.out.println("Enter the first number: ");
+			double num1 = sc.nextDouble();
+			
+			System.out.println("Enter the second number: ");
+			double num2 =  sc.nextDouble();
+		}
+	}
+
+}
