@@ -1,68 +1,111 @@
 package main;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class ConsoleBasedCalculator {
 
+	private static final DecimalFormat DF = new DecimalFormat("#.##########");
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner sc = new Scanner(System.in);
-		boolean running = true;
+		try (Scanner sc = new Scanner(System.in)) {
+			System.out.println("====== Console Based Calculator ======");
+			System.out.println("Type 'exit' anytime to quit.\n");
 
-		System.out.println("====== Cosnole Based Calculator ======");
+			while (true) {
+				Double num1 = readDouble(sc, "Enter the first number: ");
+				if (num1 == null)
+					break;
 
-		while (running) {
-			System.out.println("Enter the first number: ");
-			double num1 = sc.nextDouble();
+				Character op = readOperator(sc, "Enter operator (+, -, *, /): ");
+				if (op == null)
+					break;
 
-			System.out.println("Enter operator (+, -, *, /): ");
-			char operation = sc.next().charAt(0);
+				Double num2 = readDouble(sc, "Enter the second number: ");
+				if (num2 == null)
+					break;
 
-			System.out.println("Enter the second number: ");
-			double num2 = sc.nextDouble();
-
-			double result;
-			boolean validOperation = true;
-
-			switch (operation) {
-			case '+':
-				result = num1 + num2;
-				break;
-
-			case '-':
-				result = num1 - num2;
-				break;
-
-			case '*':
-				result = num1 * num2;
-				break;
-
-			case '/':
-				if (num2 == 0) {
-					System.out.println("❌ Error: Division by zero!");
+				Double result = calculate(num1, num2, op);
+				if (result == null) {
+					// e.g., division by zero
 					continue;
-				} else {
-					result = num1 / num2;
 				}
-				break;
 
-			default:
-				System.out.println("❌ Invalid operator!");
-				validOperation = false;
-				continue;
-			}
-			if (validOperation) {
-				System.out.println("✅ Result: " + result);
-			}
-			System.out.print("Do you want to calculate again? (yes/no): ");
-			String choice = sc.next();
+				System.out.println("Result: " + DF.format(result));
 
-			if (!choice.equalsIgnoreCase("yes")) {
-				running = false;
+				if (!askToContinue(sc))
+					break;
+				System.out.println();
+			}
+
+			System.out.println("Calculator closed. Bye");
+		}
+	}
+
+	private static Double readDouble(Scanner sc, String prompt) {
+		while (true) {
+			System.out.print(prompt);
+			String input = sc.nextLine().trim();
+
+			if (input.equalsIgnoreCase("exit"))
+				return null;
+
+			try {
+				return Double.parseDouble(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid number. Try again (or type 'exit').");
 			}
 		}
+	}
 
-		System.out.println("Calculator closed. Bye 👋");
-		sc.close();
+	private static Character readOperator(Scanner sc, String prompt) {
+		while (true) {
+			System.out.print(prompt);
+			String input = sc.nextLine().trim();
+
+			if (input.equalsIgnoreCase("exit"))
+				return null;
+
+			if (input.length() == 1) {
+				char op = input.charAt(0);
+				if (op == '+' || op == '-' || op == '*' || op == '/')
+					return op;
+			}
+
+			System.out.println("❌ Invalid operator. Use +, -, *, / (or type 'exit').");
+		}
+	}
+
+	private static Double calculate(double a, double b, char op) {
+		switch (op) {
+		case '+':
+			return a + b;
+		case '-':
+			return a - b;
+		case '*':
+			return a * b;
+		case '/':
+			if (b == 0) {
+				System.out.println("Error: Division by zero!");
+				return null;
+			}
+			return a / b;
+		default:
+			return null;
+		}
+	}
+
+	private static boolean askToContinue(Scanner sc) {
+		while (true) {
+			System.out.print("Do you want to calculate again? (yes/no): ");
+			String choice = sc.nextLine().trim();
+
+			if (choice.equalsIgnoreCase("yes"))
+				return true;
+			if (choice.equalsIgnoreCase("no"))
+				return false;
+
+			System.out.println("Please type 'yes' or 'no'.");
+		}
 	}
 }

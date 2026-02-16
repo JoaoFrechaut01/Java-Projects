@@ -1,0 +1,70 @@
+package main;
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class ConsoleBasedCalculator {
+
+	private static final DecimalFormat DF = new DecimalFormat("#.##########");
+
+	public static void main(String[] args) {
+
+		try (Scanner sc = new Scanner(System.in)) {
+			System.out.println("====== Console Based Calculator ======");
+			System.out.println("Type 'exit' anytime to quit.\n");
+
+			while (true) {
+				Double num1 = readDouble(sc, "Enter the first number: ");
+				if (num1 == null)
+					break;
+
+				Character op = readOperator(sc, "Enter operator (+, -, *, /): ");
+				if (op == null)
+					break;
+
+				Double num2 = readDouble(sc, "Enter the second number: ");
+				if (num2 == null)
+					break;
+
+				Double result = calculate(num1, num2, op);
+				if (result == null) {
+					// e.g., division by zero
+					continue;
+				}
+
+				System.out.println("Result: " + DF.format(result));
+
+				if (!askToContinue(sc))
+					break;
+				System.out.println();
+			}
+
+			System.out.println("Calculator closed. Bye 👋");
+		}
+		
+	}
+	
+	private static Double readDouble(Scanner sc, String prompt) {
+		while(true) {
+			
+			System.out.println(prompt);
+			String input = sc.nextLine().trim();
+		
+			if(input.equalsIgnoreCase("extit")) return null;
+			
+			try {
+				return Double.parseDouble(input);
+			}catch(NumberFormatException e) {
+				 System.out.println("Invalid number. Try again (or type 'exit').");
+			}
+		}
+	}
+	
+	private static Character readOperator(Scanner sc, String prompt) {
+		while(true) {
+			System.out.println(prompt);
+		}
+		
+		
+	}
+}
